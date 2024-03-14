@@ -1,0 +1,8 @@
+streamlit>=1.28.2
+watchdog
+requests
+pandas
+streamlit_pandas
+psutil
+matplotlib
+wrk
