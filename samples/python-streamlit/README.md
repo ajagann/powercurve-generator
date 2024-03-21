@@ -18,9 +18,21 @@ streamlit run greenchips.py --logger.level=debug 3
 
 ### screens
 
-![alt text](image.png)
+<p align="center"><img src="images/image.png" width=800px height=400px></p>
 
-![alt text](image-1.png)
+<p align="center"><img src="images/image-1.png" width=800px height=400px></p>
 
-![alt text](image-2.png)
+<p align="center"><img src="images/image-2.png" width=800px height=400px></p>
+
+
+### Tests with Turbostress
+CPU Info:
+```
+CPU Count: 8
+Total Cores: 16
+CPU Frequency: 4475.9260625
+```
+
+<p align="center"><img src="images/image-3.png" width=600px height=400px></p>
+
 
