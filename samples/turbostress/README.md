@@ -1,4 +1,10 @@
 
+#### cmd
+```
+go run cmd/main.go --load-step=10 > i7-baremetal-loadstep10-fullreport-mar25.csv
+```
+
+
 ### CPU Info
 <p align="left"><img src="images/image-9.png" width=400px height=200px></p>
 
