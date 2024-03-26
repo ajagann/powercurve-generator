@@ -2,6 +2,8 @@ import multiprocessing as mp
 import subprocess as sp
 import threading as th
 from time import sleep
+from subprocess import Popen, PIPE
+
 
 class GreenChips:
 
@@ -48,10 +50,12 @@ class Polling:
         thread = th.Thread(target=self.run_polling)
         thread.start()
         # periodically check if the event is set by the benchmark
+        res = Popen(['target/debug/scaphandre', 'stdout', '-t', '15', '-p' '20'], stdout=PIPE)
         while not event.is_set():
             sleep(1)
         thread.join()
         # create output?
+        print(res)
 
     def run_polling(self):
         # probably a wrapper around: sp.run("args_of_some_sort")
