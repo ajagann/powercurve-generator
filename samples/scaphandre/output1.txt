@@ -1,0 +1,210 @@
+# target/debug/scaphandre stdout -t 15 -p 20
+scaphandre::sensors: Sysinfo sees 16
+Scaphandre stdout exporter
+Sending ⚡ metrics
+Measurement step is: 2s
+scaphandre::sensors: Not enough records for socket
+Host:   0 W from 
+        package         core            uncore
+Top 20 consumers:
+Power           PID     Exe
+No processes found yet or filter returns no value.
+------------------------------------------------------------
+
+Host:   14.135828 W from 
+        package         core            uncore
+Socket0 14.32323 W |    3.795126 W      0 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.29585606 W    550596  "/usr/bin/qemu-system-x86_64"
+0.1609805 W     550600  "/usr/bin/qemu-system-x86_64"
+0.07831483 W    369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.03045577 W    4338    "/usr/lib/erlang/erts-14.1.1/bin/beam.smp"
+0.013052473 W   3746    "/usr/bin/python3.10"
+0.013052473 W   2286    "/usr/bin/python3.10"
+0.008701649 W   2534    "/usr/bin/python3.10"
+0.008701649 W   550608  "/usr/bin/qemu-system-x86_64"
+0.008701649 W   2640    "/usr/bin/python3.10"
+0.008701649 W   4591    "/usr/bin/python3.10"
+0.0043508243 W  3063    "/usr/sbin/haproxy"
+0.0043508243 W  550662  ""
+0.0043508243 W  2588    "/usr/bin/python3.10"
+0.0043508243 W  93693   ""
+0.0043508243 W  4995    "/usr/bin/python3.10"
+0.0043508243 W  551673  "/usr/bin/qemu-system-x86_64"
+0.0043508243 W  4628    "/usr/sbin/mariadbd"
+0.0043508243 W  4590    "/usr/bin/python3.10"
+0.0043508243 W  2755    "/usr/bin/python3.10"
+0.0043508243 W  3251    "/usr/bin/python3.10"
+------------------------------------------------------------
+
+Host:   17.324711 W from 
+        package         core            uncore
+Socket0 17.19906 W |    6.695118 W      0.000382 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.3626836 W     550596  "/usr/bin/qemu-system-x86_64"
+0.1839699 W     550600  "/usr/bin/qemu-system-x86_64"
+0.14191966 W    369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.015768852 W   4338    "/usr/lib/erlang/erts-14.1.1/bin/beam.smp"
+0.015768852 W   2886    "/usr/lib/openvswitch-switch/ovs-vswitchd"
+0.010512567 W   2534    "/usr/bin/python3.10"
+0.010512567 W   3746    "/usr/bin/python3.10"
+0.010512567 W   2640    "/usr/bin/python3.10"
+0.010512567 W   2286    "/usr/bin/python3.10"
+0.0052562836 W  118     ""
+0.0052562836 W  3063    "/usr/sbin/haproxy"
+0.0052562836 W  550608  "/usr/bin/qemu-system-x86_64"
+0.0052562836 W  551673  "/usr/bin/qemu-system-x86_64"
+0.0052562836 W  4164    "/usr/bin/python3.10"
+0.0052562836 W  965     "/usr/bin/containerd"
+0.0052562836 W  550652  ""
+0.0052562836 W  2755    "/usr/bin/python3.10"
+0.0052562836 W  2752    "/usr/bin/python3.10"
+0.0052562836 W  1190    "/usr/bin/dockerd"
+0.0052562836 W  4559    "/opt/td-agent/bin/ruby"
+------------------------------------------------------------
+
+Host:   14.917289 W from 
+        package         core            uncore
+Socket0 15.150847 W |   4.759456 W      0 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.3777105 W     550596  "/usr/bin/qemu-system-x86_64"
+0.21388425 W    550600  "/usr/bin/qemu-system-x86_64"
+0.16837697 W    550606  "/usr/bin/qemu-system-x86_64"
+0.063710205 W   369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.031855103 W   4338    "/usr/lib/erlang/erts-14.1.1/bin/beam.smp"
+0.018202914 W   2534    "/usr/bin/python3.10"
+0.013652187 W   3746    "/usr/bin/python3.10"
+0.013652187 W   2640    "/usr/bin/python3.10"
+0.013652187 W   2286    "/usr/bin/python3.10"
+0.009101457 W   4628    "/usr/sbin/mariadbd"
+0.009101457 W   4972    "/usr/bin/python3.10"
+0.0045507285 W  205540  ""
+0.0045507285 W  550608  "/usr/bin/qemu-system-x86_64"
+0.0045507285 W  551673  "/usr/bin/qemu-system-x86_64"
+0.0045507285 W  965     "/usr/bin/containerd"
+0.0045507285 W  2755    "/usr/bin/python3.10"
+0.0045507285 W  550635  ""
+0.0045507285 W  550630  ""
+0.0045507285 W  4559    "/opt/td-agent/bin/ruby"
+0.0045507285 W  259910  ""
+------------------------------------------------------------
+
+Host:   14.739906 W from 
+        package         core            uncore
+Socket0 14.689367 W |   4.302687 W      0 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.36782482 W    550596  "/usr/bin/qemu-system-x86_64"
+0.15251271 W    550600  "/usr/bin/qemu-system-x86_64"
+0.10765604 W    369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.013457005 W   4971    "/usr/bin/python3.10"
+0.008971336 W   2534    "/usr/bin/python3.10"
+0.008971336 W   3746    "/usr/bin/python3.10"
+0.008971336 W   2588    "/usr/bin/python3.10"
+0.008971336 W   2640    "/usr/bin/python3.10"
+0.008971336 W   551673  "/usr/bin/qemu-system-x86_64"
+0.004485668 W   464     ""
+0.004485668 W   6003    "/usr/bin/python3.10"
+0.004485668 W   3063    "/usr/sbin/haproxy"
+0.004485668 W   550608  "/usr/bin/qemu-system-x86_64"
+0.004485668 W   98593   ""
+0.004485668 W   3506    "/usr/sbin/apache2"
+0.004485668 W   287042  ""
+0.004485668 W   2435    "/usr/bin/python3.10"
+0.004485668 W   4628    "/usr/sbin/mariadbd"
+0.004485668 W   3699    "/usr/bin/python3.10"
+0.004485668 W   6002    "/usr/bin/python3.10"
+------------------------------------------------------------
+
+Host:   14.069616 W from 
+        package         core            uncore
+Socket0 14.019307 W |   3.665177 W      0 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.3137086 W     550596  "/usr/bin/qemu-system-x86_64"
+0.15040822 W    550600  "/usr/bin/qemu-system-x86_64"
+0.12462396 W    369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.030081648 W   4338    "/usr/lib/erlang/erts-14.1.1/bin/beam.smp"
+0.0128921345 W  2534    "/usr/bin/python3.10"
+0.0128921345 W  3746    "/usr/bin/python3.10"
+0.0128921345 W  2640    "/usr/bin/python3.10"
+0.008594756 W   550608  "/usr/bin/qemu-system-x86_64"
+0.008594756 W   551673  "/usr/bin/qemu-system-x86_64"
+0.008594756 W   4628    "/usr/sbin/mariadbd"
+0.008594756 W   2755    "/usr/bin/python3.10"
+0.004297378 W   6003    "/usr/bin/python3.10"
+0.004297378 W   93693   ""
+0.004297378 W   551699  ""
+0.004297378 W   965     "/usr/bin/containerd"
+0.004297378 W   6002    "/usr/bin/python3.10"
+0.004297378 W   333801  "/home/mibre/.vscode-server/bin/1e790d77f81672c49be070e04474901747115651/node"
+0.004297378 W   550652  ""
+0.004297378 W   2886    "/usr/lib/openvswitch-switch/ovs-vswitchd"
+0.004297378 W   2752    "/usr/bin/python3.10"
+------------------------------------------------------------
+
+Host:   16.333571 W from 
+        package         core            uncore
+Socket0 15.988899 W |   5.650397 W      0 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.2553685 W     550596  "/usr/bin/qemu-system-x86_64"
+0.20028904 W    550600  "/usr/bin/qemu-system-x86_64"
+0.085122846 W   369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.02503613 W    4338    "/usr/lib/erlang/erts-14.1.1/bin/beam.smp"
+0.015021678 W   2534    "/usr/bin/python3.10"
+0.015021678 W   2286    "/usr/bin/python3.10"
+0.010014452 W   3746    "/usr/bin/python3.10"
+0.010014452 W   2588    "/usr/bin/python3.10"
+0.010014452 W   2640    "/usr/bin/python3.10"
+0.010014452 W   2886    "/usr/lib/openvswitch-switch/ovs-vswitchd"
+0.005007226 W   3063    "/usr/sbin/haproxy"
+0.005007226 W   550608  "/usr/bin/qemu-system-x86_64"
+0.005007226 W   2762    "/usr/bin/socat"
+0.005007226 W   4995    "/usr/bin/python3.10"
+0.005007226 W   551673  "/usr/bin/qemu-system-x86_64"
+0.005007226 W   333588  "/usr/sbin/sshd"
+0.005007226 W   6002    "/usr/bin/python3.10"
+0.005007226 W   4590    "/usr/bin/python3.10"
+0.005007226 W   1781    "/usr/bin/containerd-shim-runc-v2"
+0.005007226 W   2755    "/usr/bin/python3.10"
+------------------------------------------------------------
+
+Host:   42.934197 W from 
+        package         core            uncore
+Socket0 42.275425 W |   31.817 W        0 W
+
+Top 20 consumers:
+Power           PID     Exe
+0.7477083 W     550596  "/usr/bin/qemu-system-x86_64"
+0.3672953 W     550600  "/usr/bin/qemu-system-x86_64"
+0.17052995 W    369128  "/home/mibre/green-chips/scaphandre/target/debug/scaphandre"
+0.065588444 W   4338    "/usr/lib/erlang/erts-14.1.1/bin/beam.smp"
+0.02623538 W    3746    "/usr/bin/python3.10"
+0.02623538 W    2640    "/usr/bin/python3.10"
+0.02623538 W    2286    "/usr/bin/python3.10"
+0.01311769 W    2534    "/usr/bin/python3.10"
+0.01311769 W    205540  ""
+0.01311769 W    550608  "/usr/bin/qemu-system-x86_64"
+0.01311769 W    4995    "/usr/bin/python3.10"
+0.01311769 W    551673  "/usr/bin/qemu-system-x86_64"
+0.01311769 W    4628    "/usr/sbin/mariadbd"
+0.01311769 W    4164    "/usr/bin/python3.10"
+0.01311769 W    3316    "/usr/bin/containerd-shim-runc-v2"
+0.01311769 W    2755    "/usr/bin/python3.10"
+0.01311769 W    15      ""
+0.01311769 W    4993    "/usr/bin/python3.10"
+0.01311769 W    3099    "/usr/bin/containerd-shim-runc-v2"
+0.01311769 W    3251    "/usr/bin/python3.10"
+------------------------------------------------------------
+
+
