@@ -18,4 +18,8 @@ class Polling(ABC):
     def run_polling(self):
         pass
 
+if __name__ == "__main__":
+    poll = Polling()
+    poll.run()
+
 

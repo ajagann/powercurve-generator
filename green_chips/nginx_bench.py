@@ -71,3 +71,9 @@ class NGINXBench(Benchmark):
 
     def poll(self, throughput):
         pass
+
+
+if __name__ == "__main__":
+    nb = NGINXBench()
+    nb.calibrate()
+    nb.run()
