@@ -30,7 +30,7 @@ class NGINXBench(Benchmark):
             # Do work that represents what will be done in the future
             soup = BeautifulSoup(response.content, features="html.parser")
             res = soup.findAll('a')
-            self.cpu_bound_task(res)
+            self.cpu_bound_task(res)  # TODO: find a better CPU stress
 
             return response.status_code
         except Exception as e:
@@ -71,7 +71,6 @@ class NGINXBench(Benchmark):
                 futures = [executor.submit(self.send_request, s, url) for _ in range(num_requests)]
 
                 # Wait for all requests to complete or CPU usage threshold is reached
-                # TODO: Fix this such that as threads complete 
                 for future in concurrent.futures.as_completed(futures):
                     if cpu_monitor_thread.done():
                         break
@@ -85,7 +84,10 @@ class NGINXBench(Benchmark):
                         future.cancel()
 
         return num_requests
-    
+
+    """
+        Calibrate find the amount of work that needs to be done to utilize all CPU resources
+    """
     def calibrate(self, num_iterations=3) -> int:
         max_throughput = []
 
