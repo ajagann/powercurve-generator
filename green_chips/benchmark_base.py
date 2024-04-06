@@ -1,14 +1,15 @@
-from abc import ABC
+from abc import ABC, abstractmethod
+import multiprocessing as mp
 
 class Benchmark(ABC):
-    @ABC.abstractmethod
-    def run(self):
+    @abstractmethod
+    def run(self, queue: mp.Queue):
         pass
 
-    @ABC.abstractmethod
+    @abstractmethod
     def calibrate(self):
-        pass
-
-    @ABC.abstractmethod
-    def send_signal(self):
+        """
+        If the benchmark does not need a calibrate, 
+        leave function definition empty.
+        """
         pass

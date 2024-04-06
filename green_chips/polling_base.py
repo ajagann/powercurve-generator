@@ -1,10 +1,7 @@
-from abc import ABC
+from abc import ABC, abstractmethod
+import multiprocessing as mp
 
 class Polling(ABC):
-    @ABC.abstractmethod
-    def run_polling(self):
-        pass
-
-    @ABC.abstractmethod
-    def send_signal(self):
+    @abstractmethod
+    def run(self, queue: mp.Queue, stop_event: mp.Event):
         pass
