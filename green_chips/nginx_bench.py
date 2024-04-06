@@ -23,10 +23,9 @@ class NGINXBench(Benchmark):
         self._max_throughput = -1
 
     def cpu_bound_task(self, x):
-        pr = 201234
-        for _ in range(10**7):
-            pr * pr
-            pr = pr + len(x)
+        pr = len(x)
+        for i in range(10**7):
+            pr += i
 
     def send_request(self, session, url, verify=False):
         try:
@@ -123,7 +122,7 @@ class NGINXBench(Benchmark):
         util_steps = [i/10 for i in range(11)]
         util_throughputs = [(step, int(self._max_throughput * step)) for step in util_steps]
         
-        for util_step, throughput in (util_throughputs):
+        for util_step, throughput in (util_throughputs[:1]):
             logging.info(f"Benchmarking {util_step}%")
             
             start = str(datetime.now())
