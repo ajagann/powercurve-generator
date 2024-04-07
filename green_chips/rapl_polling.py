@@ -28,7 +28,7 @@ class RAPLPolling(Polling):
             observed_power = []
             if type(observed_energy_microjoules) == list:
                 for e in observed_energy_microjoules:
-                    observed_power.append(observed_energy_microjoules * 1e-6/duration)
+                    observed_power.append(e * 1e-6/duration)
             else:
                 observed_power.append(observed_energy_microjoules * 1e-6/duration)
                 
