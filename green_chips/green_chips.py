@@ -92,7 +92,7 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     # TODO get this from cmdline
-    benchmark_file = 'custom_bench.py'
+    benchmark_file = 'matmult_bench.py'
     polling_file = 'rapl_polling.py'
 
     csv_output = 'powercurve.csv'
