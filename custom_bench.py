@@ -45,6 +45,7 @@ def matmult_bench(matrix_size, num_matrices=100, start_event=None, stop_early_ev
         except Exception as e:
             print(f"Error while adding to queue: {e}")
     
+    print(f"[matmult_bench({matrix_size})] - {total_flops} - {elapsed_time}s - {flops_per_s}")
     return flops_per_s, elapsed_time
 
 
@@ -66,9 +67,8 @@ def monitor_cpu_utilization(stop_event, threshold_met_event, threshold=95, proce
     print(f"CPU utilization reached {cpu_percent}%")
     return cpu_percent
 
-def calibrate():
+def find_optimal_work(threshold=95):
     # threshold = os.cpu_count() * 98  # Essentially expecting each logical core to acheive 98% CPU utilization or higher
-    threshold = 95
     stop_event = multiprocessing.Event()
     threshold_met_event = multiprocessing.Event()
     bench_start_event = multiprocessing.Event()
@@ -111,13 +111,6 @@ def calibrate():
 
             print(f"Iterating")
             while True:
-                """
-                    0. If benchmark is not complete and threshold is not reached - continue waiting
-                    1. Benchmark completes and threshold is not reached - increase matrix size
-                    2. Benchmark does not complete and threshold is reached - decrease matrix size
-                    3. Benchmark completes and threshold reaches about the same time - optimal matrix size found
-                    4. If matrix size toggles within 3 iterations - optimal matrix size found 
-                """
                 time.sleep(1)
                 if threshold_met_event.is_set():
                     if bench_thread.is_alive():
@@ -125,6 +118,7 @@ def calibrate():
                         # Decrease amount of work
                         print(f"Decreasing matrix size {matrix_size} -> {matrix_size - 50}")
                         matrix_size -= 50
+                        break
                     else:
                         # Matrix size is just right, break out of loop
                         print(f"Found optimal matrix size")
@@ -139,6 +133,7 @@ def calibrate():
                         # Increase amount of work
                         print(f"Increasing matrix size {matrix_size} -> {matrix_size + 50}")
                         matrix_size += 50
+                        break
                     
                 # Have a sanity stop
                 if matrix_size in matrix_sizes:
@@ -170,12 +165,48 @@ def calibrate():
     print(f"Optimal FLOPs: {flops_per_s}")
     print(f"Time Elapsed to calculate optimal FLOPs: {elapsed_time}")
 
-    return flops_per_s
+    return (matrix_size, flops_per_s)
 
-optimal_flops = []
-for i in range(3):
-    print(f"Calibrate Run {i+1}/3")
-    optimal_flops.append(calibrate())
+def calibrate(threshold=95):
+    # threshold = os.cpu_count() * 98  # Essentially expecting each logical core to acheive 98% CPU utilization or higher
 
-print()
-print(f"Optimal Flops {sum(optimal_flops)/len(optimal_flops)} -- {optimal_flops}")
+    optimal_flops = []
+    optimal_matrix_sizes = []
+    for i in range(3):
+        print(f"Calibrate Run {i+1}/3")
+        optimal_matrix_size, flops_per_s = find_optimal_work(threshold=threshold)
+        optimal_flops.append(flops_per_s)
+        optimal_matrix_sizes.append(optimal_matrix_size)
+
+    opt_flops = sum(optimal_flops)/len(optimal_flops)
+    opt_size = sum(optimal_matrix_sizes)/len(optimal_matrix_sizes)
+    print(f"Optimal Flops {opt_flops} -- {optimal_flops}")
+    print(f"Optimal Matrix size {opt_size} -- {optimal_matrix_sizes}")
+
+    return (opt_size, opt_flops)
+
+def run():
+    opt_mat_size, opt_flops = calibrate(threshold=98)
+
+    util_steps = [i/10 for i in range(11)]
+    util_throughputs = [(step*100, int(opt_mat_size * step)) for step in util_steps]
+
+    res = []
+    for util_step, mat_size in util_throughputs:
+        print(f"Benchmarking {util_step}% - Matrix size {mat_size} x {mat_size}")
+        
+        start = str(time.time())
+        flops_per_s, _ = matmult_bench(mat_size)
+        end = str(time.time())
+
+        res.append((start, end, util_step, flops_per_s, 'FLOPS',))
+    
+    for i in res:
+        print(i)
+
+    return res
+
+
+
+
+run()

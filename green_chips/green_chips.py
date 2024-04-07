@@ -45,8 +45,8 @@ class GreenChips:
         # TODO: Put checks here to make sure the classes have all required functions as detailed by the abstract class
 
         # Run calibrate. TODO: Decide on a format for result, prob tuple (#, metric)
-        calibrate_res = benchmark.calibrate()
-        logging.info(f"Calibrate result: {calibrate_res}")
+        # calibrate_res = benchmark.calibrate()
+        # logging.info(f"Calibrate result: {calibrate_res}")
 
         # Launch subprocesses for benchmark and polling
         stop_polling_event = mp.Event()
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     # TODO get this from cmdline
-    benchmark_file = 'nginx_bench.py'
+    benchmark_file = 'custom_bench.py'
     polling_file = 'rapl_polling.py'
 
     csv_output = 'powercurve.csv'
