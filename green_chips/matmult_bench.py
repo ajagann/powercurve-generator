@@ -209,19 +209,20 @@ class MatMultBench(Benchmark):
         
         for i in res:
             logging.info(i)
-            queue.put(i)
+            if queue:
+                queue.put(i)
 
         return res
 
 if __name__ == "__main__":
     # logFormatter = logging.Formatter("%(asctime)s [%(threadName)s] [%(levelname)-5.5s]  %(message)s")
-    logFormatter = logging.Formatter("[%(levelname)-5.5s] [%(threadName)s] \t %(message)s")
-    rootLogger = logging.getLogger()
+    # logFormatter = logging.Formatter("[%(levelname)-5.5s] [%(threadName)s] \t %(message)s")
+    # rootLogger = logging.getLogger()
 
-    consoleHandler = logging.StreamHandler()
-    consoleHandler.setFormatter(logFormatter)
-    rootLogger.addHandler(consoleHandler)
-    rootLogger.setLevel(logging.INFO)
+    # consoleHandler = logging.StreamHandler()
+    # consoleHandler.setFormatter(logFormatter)
+    # rootLogger.addHandler(consoleHandler)
+    # rootLogger.setLevel(logging.INFO)
 
     mm = MatMultBench()
     mm.run()
