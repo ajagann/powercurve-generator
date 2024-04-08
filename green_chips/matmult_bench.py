@@ -70,14 +70,13 @@ class MatMultBench(Benchmark):
         logging.info(f"CPU utilization reached {cpu_percent}%")
         return cpu_percent
     
-    def find_optimal_work(self, threshold=95):
+    def find_optimal_work(self, threshold=95, matrix_size=1000):
         # threshold = os.cpu_count() * 98  # Essentially expecting each logical core to acheive 98% CPU utilization or higher
         stop_event = multiprocessing.Event()
         threshold_met_event = multiprocessing.Event()
         bench_start_event = multiprocessing.Event()
         benchmark_queue = multiprocessing.Queue()
 
-        matrix_size = 1000
         matrix_sizes = []
 
         cpu_thread=None
@@ -173,14 +172,14 @@ class MatMultBench(Benchmark):
     """
         Calibrate - find the amount of work that needs to be done to utilize all CPU resources
     """
-    def calibrate(self, num_iterations=3, threshold=95,):
+    def calibrate(self, num_iterations=3, threshold=95, matrix_size=1000):
         # threshold = os.cpu_count() * 98  # Essentially expecting each logical core to acheive 98% CPU utilization or higher
 
         optimal_flops = []
         optimal_matrix_sizes = []
         for i in range(num_iterations):
             logging.info(f"Calibrate Run {i+1}/{num_iterations}")
-            optimal_matrix_size, flops_per_s = self.find_optimal_work(threshold=threshold)
+            optimal_matrix_size, flops_per_s = self.find_optimal_work(threshold=threshold, matrix_size=matrix_size)
             optimal_flops.append(flops_per_s)
             optimal_matrix_sizes.append(optimal_matrix_size)
 
@@ -191,8 +190,8 @@ class MatMultBench(Benchmark):
 
         return (opt_size, opt_flops)
 
-    def run(self, queue: multiprocessing.Queue=None):
-        opt_mat_size, opt_flops = self.calibrate(threshold=98)
+    def run(self, queue: multiprocessing.Queue=None, threshold=98, matrix_size=1000):
+        opt_mat_size, opt_flops = self.calibrate(threshold=threshold, matrix_size=matrix_size)
 
         util_steps = [i/10 for i in range(11)]
         util_throughputs = [(step*100, int(opt_mat_size * step)) for step in util_steps]
@@ -225,4 +224,7 @@ if __name__ == "__main__":
     # rootLogger.setLevel(logging.INFO)
 
     mm = MatMultBench()
-    mm.run()
+
+    threshold = 98
+    matrix_size=1000
+    mm.run(threshold=threshold, matrix_size=matrix_size)
