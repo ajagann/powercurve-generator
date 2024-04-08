@@ -6,6 +6,7 @@ from benchmark_base import Benchmark
 import importlib
 import inspect
 import pandas as pd
+import math
 
 class GreenChips:
 
@@ -61,13 +62,89 @@ class GreenChips:
         benchmark_proc.join()
         stop_polling_event.set()
         
-        logging.info(f"Benchmark queue: {self.get_queue_contents(benchmark_queue)}")
-        logging.info(f"Polling queue: {self.get_queue_contents(polling_queue)}")
+        # logging.info(f"Benchmark queue: {self.get_queue_contents(benchmark_queue)}")
+        # logging.info(f"Polling queue: {self.get_queue_contents(polling_queue)}")
+        
+        power_curve = self.get_power_curve(benchmark_queue, polling_queue)
+        logging.info(f"power_curve =  {power_curve}")
 
         # TODO: Generate CSV
         # file_name = "powercurve.csv"
         # self.generate_csv(benchmark_queue, polling_queue, file_name)
+    def get_power_time_buckets(self, polling_array):
+        time_ticks = [];
+        for polling_obj in polling_array:
+            start_time = float(polling_obj[0])
+            end_time = float(polling_obj[1])
+            power = sum(polling_obj[2])
+            time_ticks.append((start_time, power))     
+            time_ticks.append((end_time, -power)) 
+        time_ticks.sort(key=lambda x: x[0])
+        logging.info(f"time_ticks = {time_ticks}")
+        power_time_buckets = []
+        curr_total_power = 0
+        curr_overlapping_ticks = 0
+        for i in range(len(time_ticks) - 1):
+            start_tick = time_ticks[i]
+            end_tick = time_ticks[i+1]
+            start_time = start_tick[0]
+            curr_total_power += start_tick[1]
+            curr_overlapping_ticks += math.copysign(1, start_tick[1])
+            end_time = end_tick[0]
+            curr_power = curr_total_power / curr_overlapping_ticks
+            power_time_buckets.append((start_time, end_time, curr_power))
+        return power_time_buckets
     
+    def get_power_for_benchmark_item(self, start_time, end_time, power_time_buckets):
+        bucket_index = 0
+        left_bucket_index = -1
+        # find first bucket index
+        while (bucket_index < len(power_time_buckets)):
+            if (start_time > power_time_buckets[bucket_index][0]):
+                left_bucket_index = bucket_index
+                break
+            else:
+                bucket_index += 1
+        if (left_bucket_index == -1):
+            # didnt find a bucket, no power was polled for this benchmark data
+            return 0
+        # find last bucket index
+        right_bucket_index = -1
+        while (bucket_index < len(power_time_buckets)):
+           if (start_time <= power_time_buckets[bucket_index][1]):
+                right_bucket_index = bucket_index
+                break
+           else:
+                bucket_index += 1
+        if (right_bucket_index == -1):
+            # didnt find a bucket, benchmark ended after power stopped polling, last bucket is the best we have
+            right_bucket_index =  len(power_time_buckets) - 1
+        # get all relevant power values and average them out:
+        power_values = []
+        for i in range(left_bucket_index, right_bucket_index + 1):
+            power_values.append(power_time_buckets[i][2])
+        return sum(power_values) / len(power_values)
+                   
+    def get_power_curve(self, benchmark_queue, polling_queue):
+        logging.info(f"merging queues..")
+        # TODO not sure we need this sorted
+        sorted_benchmark_array =         self.get_queue_contents(benchmark_queue)
+        polling_array = self.get_queue_contents(polling_queue)
+        power_time_buckets_array = self.get_power_time_buckets(polling_array)
+        logging.info(f"power_time_buckets_array = {power_time_buckets_array}")
+        power_curve = [] # cpu_util, throughput, power
+        for benchmark_item in sorted_benchmark_array:
+            cpu_util = benchmark_item[2]
+            throughput = benchmark_item[3]
+            power = self.get_power_for_benchmark_item(float(benchmark_item[0]), float(benchmark_item[1]),power_time_buckets_array)
+            power_curve.append((cpu_util, throughput, power))
+        return power_curve
+            
+            
+        
+        
+           
+
     def get_queue_contents(self, queue):
         res = []
         while not queue.empty():

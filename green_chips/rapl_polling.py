@@ -14,7 +14,7 @@ class RAPLPolling(Polling):
         # Observe power value for package (all sockets) every 1 second
         while not stop_event.is_set():
             self._measurement.begin()
-            time.sleep(1)
+            time.sleep(0.2)
             self._measurement.end()
 
             result = self._measurement.result
@@ -33,8 +33,7 @@ class RAPLPolling(Polling):
                 observed_power.append(observed_energy_microjoules * 1e-6/duration)
                 
             queue.put((start, end, observed_power, 'W'))
-            # Wait every 1 second
-            time.sleep(1)
+
 
 if __name__ == "__main__":
     logging.basicConfig()
