@@ -1,11 +1,11 @@
 import multiprocessing as mp
-import subprocess as sp
 import logging
 import os
 from polling_base import Polling
 from benchmark_base import Benchmark
 import importlib
 import inspect
+import pandas as pd
 
 class GreenChips:
 
@@ -45,31 +45,43 @@ class GreenChips:
         # TODO: Put checks here to make sure the classes have all required functions as detailed by the abstract class
 
         # Run calibrate. TODO: Decide on a format for result, prob tuple (#, metric)
-        calibrate_res = benchmark.calibrate()
-        logging.info(f"Calibrate result: {calibrate_res}")
+        # calibrate_res = benchmark.calibrate()
+        # logging.info(f"Calibrate result: {calibrate_res}")
 
         # Launch subprocesses for benchmark and polling
         stop_polling_event = mp.Event()
         polling_proc = mp.Process(target=polling.run, args=(polling_queue, stop_polling_event,))
-        benchmark_proc = mp.Process(target=benchmark.run, args=(benchmark_queue,))
+        benchmark_proc = mp.Process(target=benchmark.run, args=(benchmark_queue,)) # Example expected output of benchmark: [(start, end, throughput, cpu%), ...]
 
         polling_proc.start()
         benchmark_proc.start()
 
         # Wait for benchmark to complete, then signal polling process to stop
+        # TODO: If something goes wrong with the benchmark, we need to force polling to start
         benchmark_proc.join()
         stop_polling_event.set()
         
-        def get_queue_contents(queue):
-            res = []
-            while not queue.empty():
-                res.append(queue.get_nowait())
-            return res
-        
-        logging.info(f"Benchmark queue: {get_queue_contents(benchmark_queue)}")
-        logging.info(f"Polling queue: {get_queue_contents(polling_queue)}")
+        logging.info(f"Benchmark queue: {self.get_queue_contents(benchmark_queue)}")
+        logging.info(f"Polling queue: {self.get_queue_contents(polling_queue)}")
 
         # TODO: Generate CSV
+        # file_name = "powercurve.csv"
+        # self.generate_csv(benchmark_queue, polling_queue, file_name)
+    
+    def get_queue_contents(self, queue):
+        res = []
+        while not queue.empty():
+            res.append(queue.get_nowait())
+        return res
+
+    # def generate_csv(self, benchmark_queue, polling_queue):
+
+    #     data = []
+    #     while not polling_queue.empty():
+    #         data.append(queue.get_nowait())
+        
+    #     df = pd.DataFrame(data)
+
 
 if __name__ == "__main__":
 
@@ -80,8 +92,10 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
 
     # TODO get this from cmdline
-    benchmark_file = 'nginx_bench.py'
+    benchmark_file = 'custom_bench.py'
     polling_file = 'rapl_polling.py'
+
+    csv_output = 'powercurve.csv'
 
     # Run GreenChips
     chip = GreenChips(benchmark_file=benchmark_file, polling_file=polling_file, tdp=200)
