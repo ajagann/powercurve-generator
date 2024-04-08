@@ -1,17 +1,20 @@
-import multiprocessing as mp
-import logging
 import os
-from polling_base import Polling
-from benchmark_base import Benchmark
 import importlib
 import inspect
-import pandas as pd
+import logging
+import multiprocessing as mp
 import math
+import csv
+import platform
+
+# Import GreenChip's abstract classes
+from polling_base import Polling
+from benchmark_base import Benchmark
 
 class GreenChips:
 
     # TODO: Add support for args to pass into polling or benchmark
-    def __init__(self, benchmark_file: str='nginx_bench.py', polling_file: str='rapl_polling.py', tdp: int=None):
+    def __init__(self, benchmark_file: str='nginx_bench.py', polling_file: str='rapl_polling.py', tdp: int=None, csv_output: str=None):
         self._benchmark_file = benchmark_file
         self._benchmark = self._benchmark_file.strip(".py")
         
@@ -20,6 +23,8 @@ class GreenChips:
         
         self._tdp = tdp
         self._supported_benchmarks = {"NGINX": "nginx_bench.py"}
+
+        self._csv_output = 'powercurve.csv' if not csv_output else csv_output
 
     def run(self):
         # Create queues to interact with benchmark and polling processes
@@ -45,10 +50,6 @@ class GreenChips:
 
         # TODO: Put checks here to make sure the classes have all required functions as detailed by the abstract class
 
-        # Run calibrate. TODO: Decide on a format for result, prob tuple (#, metric)
-        # calibrate_res = benchmark.calibrate()
-        # logging.info(f"Calibrate result: {calibrate_res}")
-
         # Launch subprocesses for benchmark and polling
         stop_polling_event = mp.Event()
         polling_proc = mp.Process(target=polling.run, args=(polling_queue, stop_polling_event,))
@@ -62,17 +63,25 @@ class GreenChips:
         benchmark_proc.join()
         stop_polling_event.set()
         
-        # logging.info(f"Benchmark queue: {self.get_queue_contents(benchmark_queue)}")
-        # logging.info(f"Polling queue: {self.get_queue_contents(polling_queue)}")
-        
         power_curve = self.get_power_curve(benchmark_queue, polling_queue)
         logging.info(f"power_curve =  {power_curve}")
 
         # TODO: Generate CSV
-        # file_name = "powercurve.csv"
-        # self.generate_csv(benchmark_queue, polling_queue, file_name)
+        logging.info("Generating csv file")
+        self.generate_csv(power_curve, self._csv_output)
+
+        logging.info("GreenChips powercurve generation completed")
+    
+    def generate_csv(self, power_curve, output_file):
+        header = ('CPU_perc', 'Throughput_reqPerSec', 'POWER_W')
+
+        with open(output_file, 'w', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(header)
+            writer.writerows(power_curve)
+
     def get_power_time_buckets(self, polling_array):
-        time_ticks = [];
+        time_ticks = []
         for polling_obj in polling_array:
             start_time = float(polling_obj[0])
             end_time = float(polling_obj[1])
@@ -128,7 +137,7 @@ class GreenChips:
     def get_power_curve(self, benchmark_queue, polling_queue):
         logging.info(f"merging queues..")
         # TODO not sure we need this sorted
-        sorted_benchmark_array =         self.get_queue_contents(benchmark_queue)
+        sorted_benchmark_array = self.get_queue_contents(benchmark_queue)
         polling_array = self.get_queue_contents(polling_queue)
         power_time_buckets_array = self.get_power_time_buckets(polling_array)
         logging.info(f"power_time_buckets_array = {power_time_buckets_array}")
@@ -139,26 +148,12 @@ class GreenChips:
             power = self.get_power_for_benchmark_item(float(benchmark_item[0]), float(benchmark_item[1]),power_time_buckets_array)
             power_curve.append((cpu_util, throughput, power))
         return power_curve
-            
-            
-        
-        
-           
 
     def get_queue_contents(self, queue):
         res = []
         while not queue.empty():
             res.append(queue.get_nowait())
         return res
-
-    # def generate_csv(self, benchmark_queue, polling_queue):
-
-    #     data = []
-    #     while not polling_queue.empty():
-    #         data.append(queue.get_nowait())
-        
-    #     df = pd.DataFrame(data)
-
 
 if __name__ == "__main__":
 
@@ -175,5 +170,5 @@ if __name__ == "__main__":
     csv_output = 'powercurve.csv'
 
     # Run GreenChips
-    chip = GreenChips(benchmark_file=benchmark_file, polling_file=polling_file, tdp=200)
+    chip = GreenChips(benchmark_file=benchmark_file, polling_file=polling_file, tdp=200, csv_output=csv_output)
     chip.run()
